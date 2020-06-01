@@ -1,12 +1,6 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <div class="test">
-      test
-    </div>
-    <div class="box2">
-      ssss
-    </div>
   </div>
 </template>
 
@@ -15,6 +9,13 @@ export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  data () {
+    return {
+    }
+  },
+  methods: {
+
   }
 }
 </script>
@@ -33,16 +34,6 @@ li {
   margin: 0 10px;
 }
 a {
-  color: #42b983;
-}
-
-.test{
-    //访问公共的scss变量
-    font-size:$tsize;
-    background: $bg;
-}
-.box2{
-    //访问公共的scss混入
-    @include wh($w2,$h2)
+  color: $color;
 }
 </style>

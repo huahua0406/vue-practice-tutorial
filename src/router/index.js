@@ -25,6 +25,7 @@ Vue.use(VueRouter)
 const routeOptions = [
   { path: '/', name: 'Home' },
   { path: '/about', name: 'About' },
+  { path: '/detail/:id', name: 'Detail', props: true },
   { path: '/login', name: 'Login' }
 ]
 

@@ -26,7 +26,10 @@ const routeOptions = [
   { path: '/', name: 'Home' },
   { path: '/about', name: 'About' },
   { path: '/detail/:id', name: 'Detail', props: true },
-  { path: '/login', name: 'Login' }
+  { path: '/login', name: 'Login' },
+  { path: '/demo1', name: 'Demo1' },
+  { path: '/demo2/:id', name: 'Demo2', props: true},
+  { path: '/demo3', name: 'Demo3'}
 ]
 
 const routes = routeOptions.map(route => {
@@ -35,9 +38,6 @@ const routes = routeOptions.map(route => {
     component: () => import(`@/views/${route.name}.vue`)
   }
 })
-
-// TODO: 第三种写法
-// https://github.com/visionmedia/page.js
 
 
 const router = new VueRouter({

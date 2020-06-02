@@ -1,31 +1,31 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
     <List @hook:mounted="listMounted"/>
-    <Demo1/>
-    <div id="example">
+    <ul id="example">
       <li>
-        <router-link to="/">Home</router-link>
+        <router-link to="/">生命周期</router-link>
       </li>
       <li>
-        <router-link to="/">Home</router-link>
+        <router-link to="/demo1">debounce使用</router-link>
       </li>
-    </div>
+      <li>
+        <router-link to="/demo2/123">路由props传参使用</router-link>
+      </li>
+      <li>
+        <router-link to="/demo3">搜索组件</router-link>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import List from './List'
-import HelloWorld from '@/components/HelloWorld.vue'
-import Demo1 from '@/components/Demo1.vue'
 
 export default {
   name: 'Home',
   components: {
-    List,
-    HelloWorld,
-    Demo1
+    List
   },
   methods: {
     listMounted () {

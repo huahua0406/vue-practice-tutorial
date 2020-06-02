@@ -3,7 +3,6 @@
     <div class="block">
       <h2>debounce使用</h2>
       <el-input v-model="value" @input="handleSearch" placeholder="500ms请求" style="width:500px;"></el-input>
-      <h2>路由props传参: https://router.vuejs.org/zh/guide/essentials/passing-props.html</h2>
     </div>
   </div>
 </template>
@@ -11,10 +10,7 @@
 <script>
 import { debounce } from 'lodash'
 export default {
-  name: 'Demo',
-  props: {
-    msg: String
-  },
+  name: 'Demo1',
   data () {
     return {
       value: ''

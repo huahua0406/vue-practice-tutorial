@@ -7,9 +7,7 @@
 <script>
 export default {
   name: 'Detail',
-  props: {
-    id: String
-  },
+  props: ['id'],
   created () {
     console.log(this.id)
   }

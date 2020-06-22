@@ -14,6 +14,9 @@
       <li>
         <router-link to="/demo3">搜索组件</router-link>
       </li>
+      <li>
+        <router-link to="/demo4">动态组件</router-link>
+      </li>
     </ul>
   </div>
 </template>

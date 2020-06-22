@@ -3,29 +3,29 @@
         <search-form :items="searchForm" @search="handleSearch" v-model="searchParams">
             <el-button @click="showModal()" slot="right-content" type="primary">新增</el-button>
         </search-form>
-        <el-table :data="tableData" style="width: 100%">
-            <el-table-column label="日期" prop="date" width="180"></el-table-column>
-            <el-table-column label="姓名" prop="name" width="180"></el-table-column>
-            <el-table-column label="地址" prop="address"></el-table-column>
-            <el-table-column fixed="right" label="操作" width="100">
-                <template slot-scope="scope">
-                    <el-button @click="handleClick(scope.row)" size="small" type="text">查看</el-button>
-                    <el-button size="small" type="text">编辑</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <EditDialog />
+
+        <!--外部使用方式 confirm cancel 是自定义的事件 opened是包装el-dialog的事件，通过$listeners传入到el-dialog里面-->
+        <custom-dialog
+            :visible.sync="visible"
+            title="测试弹框"
+            width="400px"
+            @ok="handleOk"
+            @cancel="handleCancel"
+        >
+            这是一段内容
+        </custom-dialog>
+        <el-button @click="handleClick">show dialog</el-button>
     </div>
 </template>
 
 <script>
 import SearchForm from '@/components/SearchForm'
-import EditDialog from '@/components/EditDialog'
+import CustomDialog from '@/components/CustomDialog'
 export default {
     name: 'Tpl',
     components: {
-        'search-form': SearchForm,
-        EditDialog
+        SearchForm,
+        CustomDialog
     },
 
     data () {
@@ -80,12 +80,21 @@ export default {
                     address: '上海市普陀区金沙江路 1516 弄'
                 }
             ],
-            columns: []
+            columns: [],
+            visible: false
         }
     },
     methods: {
         showModal () {},
-        handleClick () {},
+        handleClick () {
+            this.visible = true
+        },
+        handleOk () {
+            console.log('ok')
+        },
+        handleCancel () {
+            console.log('cancel')
+        },
         handleSearch (val) {
             console.log(val)
         }

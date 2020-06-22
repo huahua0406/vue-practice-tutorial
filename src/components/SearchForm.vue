@@ -51,6 +51,7 @@ export default {
     },
     created () {
         this.init()
+        // https://juejin.im/post/5ebb336ce51d454dd15f0813
     },
     methods: {
         init () {

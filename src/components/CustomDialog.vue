@@ -19,10 +19,9 @@
     </el-dialog>
 </template>
 <script>
-// https://juejin.im/post/5eddbaee5188254344768fdc
-// https://www.jianshu.com/p/f5492824c4ee
-// https://segmentfault.com/q/1010000019492993?sort=created
+
 export default {
+    name: 'CustomDialog',
     // 默认情况下vue会把父作用域的不被认作 props 的特性绑定 且作为普通的 HTML 特性应用在子组件的根元素上
     // 通过设置 inheritAttrs 到 false，这些默认行为将会被去掉
     inheritAttrs: false,
@@ -40,21 +39,20 @@ export default {
                 return this.visible
             },
             set (val) {
-                console.log(val)
                 this.$emit('update:visible', val)
             }
         }
     },
     created () {
-        console.log(this.$attrs, this.$listeners)
+        // console.log(this.$attrs, this.$listeners)
     },
     methods: {
         // 对外抛出cancel事件
         _handleCancel () {
             this.$emit('update:visible', false)
-            // this.$emit('cancel')
+            this.$emit('cancel')
         },
-        // 对外抛出 handleOk事件
+        // 对外抛出ok事件
         _handleOk () {
             this.$emit('ok')
         }

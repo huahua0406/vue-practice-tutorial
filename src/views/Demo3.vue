@@ -13,8 +13,9 @@
             @cancel="handleCancel"
         >
             这是一段内容
+            <el-input v-model="value"></el-input>
         </custom-dialog>
-        <el-button @click="handleClick">show dialog</el-button>
+        <el-button @click="handleClick">打开弹窗</el-button>
     </div>
 </template>
 
@@ -81,7 +82,8 @@ export default {
                 }
             ],
             columns: [],
-            visible: false
+            visible: false,
+            value: ''
         }
     },
     methods: {
@@ -91,9 +93,10 @@ export default {
         },
         handleOk () {
             console.log('ok')
+            this.visible = false
         },
         handleCancel () {
-            console.log('cancel')
+            this.$message({ type: 'success', message: '关闭' })
         },
         handleSearch (val) {
             console.log(val)

@@ -23,12 +23,12 @@
 
 <script>
 // @ is an alias to /src
-import List from './List'
+// import List from '@/componets/List'
 
 export default {
   name: 'Home',
   components: {
-    List
+    // List
   },
   methods: {
     listMounted () {

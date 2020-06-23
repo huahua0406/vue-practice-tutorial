@@ -23,7 +23,7 @@ export default {
     },
     // 注意，这里debounce中的第一个参数，不能写成箭头函数，否则，取不到this
     remoteMethod: debounce(function (query) {
-      // to do ...
+      // todo ...
       // this 的指向没有问题
       console.log('此处向后台发起请求:' + query)
       //

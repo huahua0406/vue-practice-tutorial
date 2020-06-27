@@ -13,6 +13,10 @@ Vue.use(ElementUI, { size: 'small', zIndex: 3000 });
 import componentRegister from './componentRegister'
 Vue.use(componentRegister)
 
+// api全局注册到原型
+import api from './api'
+Vue.use(api)
+
 // 导入图片预加载方法以及图片列表
 const imgList = require('./assets/js/imgList')
 import { imgsPreloader } from './utils/imgPreloader'

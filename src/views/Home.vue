@@ -15,7 +15,10 @@
         <router-link to="/demo3">搜索组件</router-link>
       </li>
       <li>
-        <router-link to="/demo4">动态组件</router-link>
+        <router-link to="/comp">动态组件</router-link>
+      </li>
+      <li>
+        <router-link to="/demo4">sku table</router-link>
       </li>
     </ul>
   </div>

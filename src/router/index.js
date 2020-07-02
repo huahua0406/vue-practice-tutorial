@@ -8,6 +8,7 @@ const _import = require('./_import_' + process.env.NODE_ENV)
 // const asyncRouterMap = []
 // const constantRouterMap = []
 // TODO: https://juejin.im/post/5c106485e51d450e657571a6
+// https://juejin.im/post/5c106485e51d450e657571a6#heading-1
 
 Vue.use(VueRouter)
 
@@ -47,6 +48,11 @@ const routes = [
     path: '/demo3',
     name: 'demo3',
     component: _import('Demo3')
+  },
+  {
+    path: '/demo4',
+    name: 'demo4',
+    component: _import('Demo4')
   },
   {
     path: '/about',

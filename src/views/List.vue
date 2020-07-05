@@ -29,7 +29,7 @@ export default {
         console.log('parent beforeDestroy')
     },
     destroyed () {
-        console.log('home destroyed')
+        console.log('parent destroyed')
     }
 }
 </script>

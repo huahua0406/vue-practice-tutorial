@@ -49,4 +49,10 @@ export default {
 .container{
     padding: 25px;
 }
+.mb10{
+    margin-bottom: 10px;
+}
+.mb20{
+    margin-bottom: 10px;
+}
 </style>

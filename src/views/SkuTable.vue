@@ -1,13 +1,13 @@
 <template>
     <div class="container">
-        <el-card>
+        <el-card class="mb20">
             <div slot="header">规格设置：</div>
-            <el-form label-width="80px" ref="form">
-                <div :key="index" v-for="(item, index) in form">
-                    <el-form-item label="规格名">
+            <el-form label-position="left" label-width="80px" ref="form">
+                <div :key="index" v-for="(item, index) in specList">
+                    <el-form-item label="规格名:">
                         <el-input style="width:300px" v-model="item.specName"></el-input>
                     </el-form-item>
-                    <el-form-item label="规格值">
+                    <el-form-item label="规格值:">
                         <el-tag
                             :disable-transitions="false"
                             :key="`${tag}__${idx}`"
@@ -16,13 +16,12 @@
                             v-for="(tag, idx) in item.specVals"
                         >{{tag}}</el-tag>
                         <el-input
-                            @blur="handleInputConfirm(index)"
-                            @keyup.enter.native="handleInputConfirm(index)"
-                            class="input-new-tag"
-                            ref="saveTagInput"
+                            @blur="handleInputAdd(index)"
+                            @keyup.enter.native="handleInputAdd(index)"
+                            placeholder="多个规格值以空格隔开"
                             size="small"
                             style="width:300px"
-                            v-model="item.inputValue"
+                            v-model="addValues[index]"
                         >
                             <el-button size="small" slot="append">+ 新增</el-button>
                         </el-input>
@@ -31,38 +30,55 @@
             </el-form>
             <!-- 新增 -->
             <div>
-                <el-input @keyup.enter.native="handleInput" placeholder="多个规格名以空格分割" style="width:300px" v-model="inputValue">
-                    <el-button @click="handleInput" slot="append" type="primary">+ 新增</el-button>
+                <el-input
+                    @blur="handleInputConfirm"
+                    @keyup.enter.native="handleInputConfirm"
+                    placeholder="多个规格名以空格隔开"
+                    ref="addInput"
+                    style="width:300px"
+                    v-if="inputVisible"
+                    v-model="inputValue"
+                >
+                    <el-button @click="handleInputConfirm" slot="append" type="primary">+ 添加</el-button>
                 </el-input>
+                <el-button type="primary" @click="showInput" class="button-new-tag" size="small" v-else>+ 添加规格名</el-button>
             </div>
         </el-card>
         <el-card>
             <div slot="header">规格信息</div>
             <div>
-                <span>批量设置：</span>
+                <el-form :inline="true" :model="formInline" class="form-inline">
+                    <el-form-item label="指导价倍数">
+                        <el-input-number :max="10" :min="1" :precision="2" label="label" v-model="formInline.guide_price_multiple"></el-input-number>
+                        <el-button type="primary" @click="batchSetGuidePrice">批量设置指导价倍数</el-button>
+                    </el-form-item>
+                    <el-form-item label="售价倍数">
+                        <el-input-number :max="10" :min="1" :precision="2" label="label" v-model="formInline.sell_price_multiple"></el-input-number>
+                        <el-button type="primary" @click="batchSetSellPrice">批量设置售价</el-button>
+                    </el-form-item>
+                </el-form>
                 <el-table :data="tableData" :span-method="spanMethod" border style="width: 100%; margin-top: 20px">
                     <!-- 自定义部分 -->
-                    <el-table-column :key="i" :label="col.label" :prop="col.prop" v-for="(col, i) in specNames"></el-table-column>
-
+                    <el-table-column :key="idx" :label="col.label" :prop="col.prop" v-for="(col, idx) in columns"></el-table-column>
                     <!-- 固定写死的部分 -->
                     <el-table-column label="SKU编码" prop="sku_sn">
                         <template slot-scope="scope">
-                            <el-input size="mini" v-model="scope.row['sku_sn']"></el-input>
+                            <el-input size="mini" placeholder="请输入" v-model="scope.row['sku_sn']"></el-input>
                         </template>
                     </el-table-column>
-                    <el-table-column label="数值 1（元）" prop="guide_price">
+                    <el-table-column label="进货价（元）" prop="purchase_price">
                         <template slot-scope="scope">
-                            <el-input size="mini" v-model="scope.row['guide_price']"></el-input>
+                            <el-input size="mini" placeholder="请输入" v-model="scope.row['purchase_price']"></el-input>
                         </template>
                     </el-table-column>
-                    <el-table-column label="数值 2（元）" prop="purchase_price">
+                    <el-table-column label="指导价（元）" prop="guide_price">
                         <template slot-scope="scope">
-                            <el-input size="mini" v-model="scope.row['purchase_price']"></el-input>
+                            <el-input size="mini" placeholder="请输入" v-model="scope.row['guide_price']"></el-input>
                         </template>
                     </el-table-column>
-                    <el-table-column label="数值 3（元）" prop="sell_price">
+                    <el-table-column label="售价（元）" prop="sell_price">
                         <template slot-scope="scope">
-                            <el-input size="mini" v-model="scope.row['sell_price']"></el-input>
+                            <el-input size="mini" placeholder="请输入" v-model="scope.row['sell_price']"></el-input>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -72,119 +88,125 @@
 </template>
 
 <script>
-// https://github.com/zaxlct/vue-sku/blob/master/src/App.vue
-/**
- * 生成笛卡尔积
- * @returns {*}
- */
-function descartes (array) {
-    if (array.length < 2) return array[0] || []
-
-    return [].reduce.call(array, function (col, set) {
-        var res = []
-        col.forEach(function (c) {
-            set.forEach(function (s) {
-                var t = [].concat(Array.isArray(c) ? c : [c])
-                t.push(s)
-                res.push(t)
-            })
-        })
-        return res
-    })
-}
+import { descartes, getUuid } from '@/utils/util'
 
 export default {
-    name: 'Sku',
+    name: 'SkuTable',
     props: {},
     data () {
         return {
-            form: [],
-            inputValue: '',
+            inputVisible: false,
+            inputValue: '', // 新增
             skuList: [],
             tableData: [],
             specList: [
-                { name: '颜色', children: ['黄色', '绿色'] },
-                { name: '尺寸', children: ['S', 'M', 'L'] },
-                { name: '大小', children: ['小', '中', '大'] }
+                { id: 1, specName: '颜色', specVals: ['黄色', '绿色'] },
+                { id: 2, specName: '尺寸', specVals: ['S', 'M', 'L'] },
+                { id: 3, specName: '大小', specVals: ['小', '中', '大'] }
             ],
-            specNames: [
-                { label: '颜色', prop: 'attr_0' },
-                { label: '尺寸', prop: 'attr_1' },
-                { label: '大小', prop: 'attr_1' }
-            ],
-            columns: [
-                { label: 'SKU货号', prop: 'sku_sn' },
-                { label: '指导价', prop: 'guide_price' },
-                { label: '售价1', prop: 'purchase_price' },
-                { label: '售价', prop: 'sell_price' }
-            ]
+            addValues: [],
+            formInline: {
+                guide_price_multiple: 1.2,
+                sell_price_multiple: 1.5
+            }
+        }
+    },
+    computed: {
+        columns () {
+            const columns = this.specList.map((item, index) => {
+                return {
+                    label: item.specName,
+                    prop: `attr_${item.id}`
+                }
+            })
+            return columns
         }
     },
     created () {
         // 对数据进行过滤，规格名称不为空，且规格值列表大于0
         const arr = this.specList
-            .filter(v => {
-                return v.name && v.children.length > 0
+            .filter(item => {
+                return item.specName && item.specVals.length
             })
             .map(item => {
-                return item.children
+                return item.specVals
             })
         if (arr.length <= 0) {
             return
         }
 
-        const specNames = this.specList.map((item, index) => {
-            return {
-                label: item.name,
-                prop: `attr_${index}`,
-                children: item.children
-            }
-        })
-        this.specNames = specNames
         this.skuList = descartes(arr)
-        // console.log(this.skuList)
+
         for (let index = 0; index < this.skuList.length; index++) {
-            const item = this.skuList[index]
-            // console.log(Object.values(item))
             const temp = {}
-            Object.values(item).forEach(val => {
-                this.specNames.forEach(it => {
-                    if (it.children.includes(val)) {
-                        temp[it.prop] = val
+            const row = this.skuList[index]
+
+            this.specList.forEach(item => {
+                row.forEach(val => {
+                    if (item.specVals.includes(val)) {
+                        temp[`attr_${item.id}`] = val
                     }
                 })
             })
+
             this.tableData.push({
                 ...temp,
                 sku_sn: undefined,
-                guide_price: 100,
-                purchase_price: 1,
+                purchase_price: 100,
+                guide_price: undefined,
                 sell_price: undefined
             })
-            // console.log(this.tableData)
         }
     },
     methods: {
-        handleInput () {
+        showInput () {
+            this.inputVisible = true
+            this.$nextTick(_ => {
+                this.$refs.addInput.$refs.input.focus()
+            })
+        },
+        handleInputConfirm () {
             const inputValue = this.inputValue
             if (inputValue) {
-                this.form.push({
+                this.specList.push({
+                    id: getUuid(),
                     specName: inputValue,
-                    specVals: [],
-                    inputValue: ''
+                    specVals: []
                 })
             }
+            this.inputVisible = false
             this.inputValue = ''
         },
-        handleClose (tag, index) {
-            this.form[index].specVals.splice(this.form[index].specVals.indexOf(tag), 1)
+        handleClose (spec, index) {
+            this.specList[index].specVals.splice(this.specList[index].specVals.indexOf(spec), 1)
         },
-        handleInputConfirm (index) {
-            const inputValue = this.form[index].inputValue
-            if (inputValue) {
-                this.form[index].specVals.push(inputValue)
+        handleInputAdd (index) {
+            const addValue = this.addValues[index].trim() || ''
+            const oldArr = this.specList[index].specVals
+            // 去重规格名
+            if (oldArr.includes(addValue)) {
+                this.$message.error('规格名重复')
+                return
             }
-            this.form[index].inputValue = ''
+            if (addValue) {
+                const newArr = addValue.split(/\s+/) // 使用空格分割成数组
+                this.specList[index].specVals = [...oldArr, ...newArr]
+            }
+            this.$set(this.addValues, index, '')
+        },
+        batchSetGuidePrice () {
+            const guidePriceMultiple = this.formInline.guide_price_multiple
+            this.tableData = this.tableData.map(item => ({
+                ...item,
+                guide_price: (item.purchase_price || 0) * guidePriceMultiple
+            }))
+        },
+        batchSetSellPrice () {
+            const sellPriceMultiple = this.formInline.sell_price_multiple
+            this.tableData = this.tableData.map(item => ({
+                ...item,
+                sell_price: (item.purchase_price || 0) * sellPriceMultiple
+            }))
         },
         spanMethod ({ row, column, rowIndex, columnIndex }) {
             // columnIndex <= 2 改成自己需要处理的列序号(第一列是0)
@@ -192,8 +214,6 @@ export default {
                 if (row[column.property] === '') {
                     return [1, 1]
                 }
-                console.log(this)
-                console.log(this[column.property])
                 if (this[column.property] !== row[column.property]) {
                     this[column.property] = row[column.property]
                     let num = 0
@@ -217,8 +237,8 @@ export default {
 </script>
 
 <style lang="scss">
-.el-tag + .el-tag {
-    margin-left: 10px;
+.el-tag {
+    margin-right: 10px;
 }
 .button-new-tag {
     margin-left: 10px;

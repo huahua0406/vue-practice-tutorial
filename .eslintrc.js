@@ -12,7 +12,7 @@ module.exports = {
   },
   rules: {
     "template-curly-spacing" : "off",
-    "indent" : ["error", 4],// 控制缩进
+    "indent" : ["warn", 4],// 控制缩进
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
   }

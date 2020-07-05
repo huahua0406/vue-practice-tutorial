@@ -44,6 +44,18 @@
                 <el-button type="primary" @click="showInput" class="button-new-tag" size="small" v-else>+ 添加规格名</el-button>
             </div>
         </el-card>
+
+        <el-card class="mb20">
+            <div slot="header">数据</div>
+            <div>
+                <vue-json-pretty
+                    :path="'res'"
+                    :data="specListFilter"
+                >
+                </vue-json-pretty>
+            </div>
+        </el-card>
+
         <el-card>
             <div slot="header">规格信息</div>
             <div>
@@ -88,11 +100,15 @@
 </template>
 
 <script>
+import VueJsonPretty from 'vue-json-pretty'
 import { descartes, getUuid } from '@/utils/util'
 
 export default {
     name: 'SkuTable',
     props: {},
+    components: {
+        VueJsonPretty
+    },
     data () {
         return {
             inputVisible: false,
@@ -112,6 +128,9 @@ export default {
         }
     },
     computed: {
+        specListFilter () {
+            return this.specList.filter(item => item.specName && item.specVals.length)
+        },
         columns () {
             const columns = this.specList.map((item, index) => {
                 return {

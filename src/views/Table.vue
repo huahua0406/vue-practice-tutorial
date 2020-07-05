@@ -1,18 +1,15 @@
 <template>
     <div class="container">
-        <el-button @click="showModal">打开弹窗</el-button>
-
-        <search-form :items="searchForm" @search="handleSearch" v-model="searchParams">
-            <el-button @click="showModal()" slot="right-content" type="primary">新增</el-button>
-        </search-form>
-
-        <!--外部使用方式 confirm cancel 是自定义的事件 opened是包装el-dialog的事件，通过$listeners传入到el-dialog里面-->
-        <custom-dialog :visible.sync="visible" @cancel="handleCancel" @ok="handleOk" title="测试弹框" width="400px">
-            这是一段内容
-            <el-input v-model="value"></el-input>
-        </custom-dialog>
-
-        <custom-table v-loading="loading" :columns="columns" :list="list" :max-height="500" @selection-change="handleSelectionChange" border size="mini" @view="handleView">
+        <custom-table
+            :columns="columns"
+            :list="list"
+            :max-height="500"
+            @selection-change="handleSelectionChange"
+            @view="handleView"
+            border
+            size="mini"
+            v-loading="loading"
+        >
             <!-- 默认的slot  如果交互很复杂 我们还可以直接使用表格内部的组件 -->
             <el-table-column label="操作" width="200">
                 <template slot-scope="scope">
@@ -21,52 +18,19 @@
                 </template>
             </el-table-column>
         </custom-table>
-
     </div>
 </template>
 
 <script>
-import SearchForm from '@/components/SearchForm'
-import CustomDialog from '@/components/CustomDialog'
 import CustomTable from '@/components/CustomTable'
-export default {
-    name: 'Tpl',
-    components: {
-        SearchForm,
-        CustomTable,
-        CustomDialog
-    },
 
+export default {
+    name: 'Table',
+    components: {
+        CustomTable
+    },
     data () {
         return {
-            searchForm: [
-                { name: '发起人', key: 'name' },
-                { name: '维修师傅', key: 'repairerId', type: 'select', options: [] },
-                { name: '楼号', key: 'floorId', type: 'select', options: [] },
-                {
-                    name: '宿舍',
-                    key: 'roomId',
-                    type: 'select',
-                    options: [
-                        {
-                            label: '区域一',
-                            value: 'shanghai'
-                        },
-                        {
-                            label: '区域二',
-                            value: 'beijing'
-                        }
-                    ]
-                }
-            ],
-            searchParams: {
-                pageNo: 1,
-                pageSize: 15,
-                name: '',
-                repairerId: undefined,
-                floorId: undefined,
-                roomId: undefined
-            },
             tableData: [
                 {
                     date: '2016-05-02',
@@ -107,9 +71,7 @@ export default {
                         { name: '删除', emitKey: 'delete' }
                     ]
                 }
-            ],
-            visible: false,
-            value: ''
+            ]
         }
     },
     created () {
@@ -120,19 +82,6 @@ export default {
         }, 2000)
     },
     methods: {
-        showModal () {
-            this.visible = true
-        },
-        handleOk () {
-            console.log('ok')
-            this.visible = false
-        },
-        handleCancel () {
-            this.$message({ type: 'success', message: '关闭' })
-        },
-        handleSearch (val) {
-            console.log(val)
-        },
         handleSelectionChange () {
             console.log(arguments)
         },

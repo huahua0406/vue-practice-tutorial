@@ -1,5 +1,5 @@
 <template>
-  <div class="demo">
+  <div class="container">
     <div class="block">
       <h2>debounce使用</h2>
       <el-input v-model="value" @input="handleSearch" placeholder="500ms请求" style="width:500px;"></el-input>
@@ -11,7 +11,7 @@
 import { debounce } from 'lodash'
 
 export default {
-  name: 'Demo1',
+  name: 'Debounce',
   data () {
     return {
       value: ''

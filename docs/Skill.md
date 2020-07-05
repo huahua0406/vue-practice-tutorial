@@ -16,3 +16,7 @@ console.timeEnd('加载时间');
 
 
 3. 批量注册全局组件
+
+
+
+4. 路由props传参:https://router.vuejs.org/zh/guide/essentials/passing-props.html

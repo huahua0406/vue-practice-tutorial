@@ -1,24 +1,29 @@
 <template>
   <div class="home">
-    <List @hook:mounted="listMounted"/>
     <ul id="example">
       <li>
-        <router-link to="/">生命周期</router-link>
+        <router-link to="/lifecycle">父子组件生命周期加载顺序</router-link>
       </li>
       <li>
-        <router-link to="/demo1">debounce使用</router-link>
+        <router-link to="/debounce">debounce使用</router-link>
       </li>
       <li>
-        <router-link to="/demo2/123">路由props传参使用</router-link>
+        <router-link to="/search">表单搜索项组件</router-link>
       </li>
       <li>
-        <router-link to="/demo3">搜索组件</router-link>
+        <router-link to="/table">table组件</router-link>
+      </li>
+      <li>
+        <router-link to="/dialog">二次封装dialog组件</router-link>
       </li>
       <li>
         <router-link to="/comp">动态组件</router-link>
       </li>
       <li>
-        <router-link to="/demo4">sku table</router-link>
+        <router-link to="/sku-table">sku table</router-link>
+      </li>
+      <li>
+        <router-link to="/sku-select">sku select</router-link>
       </li>
     </ul>
   </div>
@@ -31,30 +36,8 @@
 export default {
   name: 'Home',
   components: {
-    // List
   },
   methods: {
-    listMounted () {
-      console.log('list ====> listMounted')
-    }
-  },
-  beforeCreate () {
-    console.log('home beforeCreate')
-  },
-  created () {
-    console.log('home created')
-  },
-  beforeMount () {
-    console.log('home beforeMount')
-  },
-  mounted () {
-    console.log('home ====> mounted')
-  },
-  beforeDestroy () {
-    console.log('home beforeDestroy')
-  },
-  destroyed () {
-    console.log('home destroyed')
   }
 }
 </script>

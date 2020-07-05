@@ -1,5 +1,5 @@
 <template>
-    <div class="tpl">
+    <div class="container">
         <el-card>
             <div slot="header">规格设置：</div>
             <el-form label-width="80px" ref="form">

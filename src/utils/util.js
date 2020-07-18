@@ -5,7 +5,7 @@ const now = Date.now()
  *生成uuid
  * @param {*String} prefix
  */
-export function getUuid (prefix = 'vue') {
+export function getUuid (prefix = 'uid') {
     const id = index
     index += 1
     return `${prefix}-${now}-${id}`

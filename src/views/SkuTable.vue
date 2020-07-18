@@ -26,6 +26,7 @@
                             <el-button size="small" slot="append">+ 新增</el-button>
                         </el-input>
                     </el-form-item>
+                    <el-divider></el-divider>
                 </div>
             </el-form>
             <!-- 新增 -->
@@ -46,11 +47,11 @@
         </el-card>
 
         <el-card class="mb20">
-            <div slot="header">数据</div>
+            <div slot="header">SKU 数据</div>
             <div>
                 <vue-json-pretty
                     :path="'res'"
-                    :data="specListFilter"
+                    :data="skuList"
                 >
                 </vue-json-pretty>
             </div>
@@ -76,6 +77,11 @@
                     <el-table-column label="SKU编码" prop="sku_sn">
                         <template slot-scope="scope">
                             <el-input size="mini" placeholder="请输入" v-model="scope.row['sku_sn']"></el-input>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="库存" prop="stock">
+                        <template slot-scope="scope">
+                            <el-input size="mini" placeholder="请输入" v-model="scope.row['stock']"></el-input>
                         </template>
                     </el-table-column>
                     <el-table-column label="进货价（元）" prop="purchase_price">
@@ -170,7 +176,9 @@ export default {
 
             this.tableData.push({
                 ...temp,
+                skus: row,
                 sku_sn: undefined,
+                stock: 10,
                 purchase_price: 100,
                 guide_price: undefined,
                 sell_price: undefined
@@ -178,6 +186,17 @@ export default {
         }
     },
     methods: {
+        getSpecArr (sku) {
+            // this.specList.forEach(item => {
+
+            // })
+            // return [{
+            //     key_id: 1,
+            //     key: '颜色',
+            //     value_id: 45,
+            //     value: '金属灰'
+            // }]
+        },
         showInput () {
             this.inputVisible = true
             this.$nextTick(_ => {
